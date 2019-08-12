@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "rubygems/user_interaction"
 require_relative "path"
 require "fileutils"
 
@@ -71,6 +70,7 @@ module Spec
       ENV["HOME"] = Path.home.to_s
       ENV["TMPDIR"] = Path.tmpdir.to_s
 
+      require "rubygems/user_interaction"
       Gem::DefaultUserInteraction.ui = Gem::SilentUI.new
     end
 
