@@ -40,10 +40,9 @@ module Spec
     end
 
     def gem_load(gem_name, bin_container)
-      gem_activate(gem_name)
-      load Gem.bin_path(gem_name, bin_container)
-    rescue Gem::LoadError => e
-      warn "We couln't activate #{gem_name} (#{e.requirement}). Run `gem install #{gem_name}:'#{e.requirement}'`"
+      unload_rubygems
+      load_rubygems
+      gem_load_and_activate(gem_name, bin_container)
     end
 
     def gem_require(gem_name)
@@ -76,6 +75,57 @@ module Spec
     end
 
   private
+
+    def unload_rubygems
+      if defined? Gem
+        require "rbconfig"
+
+        ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
+        ruby << RbConfig::CONFIG["EXEEXT"]
+
+        cmd = [ruby, $0, *ARGV].compact
+        cmd[1, 0] = "--disable-gems"
+
+        exec(ENV, *cmd)
+      end
+    end
+
+    def run(*cmd)
+      return if system(*cmd, :out => IO::NULL)
+      raise "Running `#{cmd.join(" ")}` failed"
+    end
+
+    def load_rubygems
+      require "pathname"
+
+      version = ENV.delete("RGV")
+      if version
+        rubygems_path = Pathname.new(version).expand_path
+        unless rubygems_path.directory?
+          rubygems_path = Pathname.new("tmp/rubygems").expand_path
+          unless rubygems_path.directory?
+            rubygems_path.parent.mkpath unless rubygems_path.directory?
+            run("git", "clone", "https://github.com/rubygems/rubygems.git", rubygems_path.to_s)
+          end
+
+          Dir.chdir(rubygems_path) do
+            run("git remote update")
+            run("git", "checkout", version, "--quiet")
+          end
+        end
+
+        $:.unshift File.expand_path("lib", rubygems_path)
+      end
+
+      require "rubygems"
+    end
+
+    def gem_load_and_activate(gem_name, bin_container)
+      gem_activate(gem_name)
+      load Gem.bin_path(gem_name, bin_container)
+    rescue Gem::LoadError => e
+      warn "We couln't activate #{gem_name} (#{e.requirement}). Run `gem install #{gem_name}:'#{e.requirement}'`"
+    end
 
     def gem_activate(gem_name)
       gem_requirement = DEV_DEPS[gem_name]
