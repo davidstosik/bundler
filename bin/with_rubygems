@@ -18,7 +18,6 @@ unless rubygems_path.directory?
   end
   Dir.chdir(rubygems_path) do
     run("git remote update")
-    version = "v#{version}" if version =~ /\A\d/
     run("git", "checkout", version, "--quiet")
   end
 end
