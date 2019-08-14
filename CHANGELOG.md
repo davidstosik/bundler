@@ -43,6 +43,7 @@ Features:
   - Platform handling is improved by automatically resolving and locking all platforms available in the Gemfile, and installing for the current one. This removes the need for any platform warnings ([#7215](https://github.com/bundler/bundler/pull/7215))
   - `bundle cache` now includes all features provided by `bundle package` ([#7249](https://github.com/bundler/bundler/pull/7249))
   - Several improvements on new gem templates ([#6924](https://github.com/bundler/bundler/pull/6924), [#6968](https://github.com/bundler/bundler/pull/6968), [#7209](https://github.com/bundler/bundler/pull/7209), [#7222](https://github.com/bundler/bundler/pull/7222), [#7238](https://github.com/bundler/bundler/pull/7238))
+  - Add `--[no-]git` option to `bundle gem` to generate non source control gems. Useful for monorepos, for example ([#7263](https://github.com/bundler/bundler/pull/7263))
 
 Bugfixes:
 
@@ -77,6 +78,7 @@ Bugfixes:
   - Fix `MissingRevision` git errors to include the specific `git` command that failed under the hood ([#7225](https://github.com/bundler/bundler/pull/7225))
   - Fix using gemspec & `force_ruby_platform` on Windows ([#6809](https://github.com/bundler/bundler/pull/6809))
   - bundler's binstub checks on bundler version are now consisten with rubygems `BundlerVersionFinder` ([#7259](https://github.com/bundler/bundler/pull/7259))
+  - Fix `bundle install` and `bundle update` generating different lockfiles when `path:` gems with relative paths starting with "./" were used ([#7264](https://github.com/bundler/bundler/pull/7264))
 
 Documentation:
 
