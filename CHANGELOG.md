@@ -22,11 +22,9 @@ on minimizing (hopefully eliminating) this, such as
 
 Deprecations:
 
-  - `Bundler.with_clean_env` is deprecated and renamed to `Bundler.with_unbundled_env` ([#6843](https://github.com/bundler/bundler/pull/6843))
-  - `Bundler.clean_system` is deprecated and renamed to `Bundler.unbundled_system` ([#7052](https://github.com/bundler/bundler/pull/7052))
-  - `Bundler.clean_exec` is deprecated and renamed to `Bundler.unbundled_exec` ([#7052](https://github.com/bundler/bundler/pull/7052))
-
-  - (TODO) Elaborate on the rest of the deprecations that will be enabled.
+  * See the [the upgrading document](UPGRADING.md) for a detailed explanation of
+    the deprecations that are getting enabled in bundler 2.1, and the future
+    breaking changes in bundler 3.
 
 Features:
 
