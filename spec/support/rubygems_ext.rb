@@ -77,7 +77,9 @@ module Spec
   private
 
     def unload_rubygems
-      if defined? Gem
+      if ENV["RUBYOPT"] || defined?(Gem)
+        ENV.delete("RUBYOPT")
+
         require "rbconfig"
 
         ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["ruby_install_name"])
